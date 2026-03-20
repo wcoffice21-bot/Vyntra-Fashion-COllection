@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Product Detail</title>
+
+<style>
+body{
+font-family:Arial;
+margin:0;
+padding:0;
+}
+
+.container{
+display:flex;
+gap:30px;
+padding:30px;
+flex-wrap:wrap;
+}
+
+.image-box{
+flex:1;
+min-width:300px;
+}
+
+.image-box img{
+width:100%;
+border-radius:10px;
+cursor:zoom-in;
+transition:0.3s;
+}
+
+.image-box img:hover{
+transform:scale(1.1);
+}
+
+.details{
+flex:1;
+min-width:300px;
+}
+
+.price{
+color:red;
+font-size:22px;
+font-weight:bold;
+}
+
+button{
+padding:10px 15px;
+margin-top:10px;
+border:none;
+background:#ff4d4d;
+color:white;
+cursor:pointer;
+border-radius:5px;
+}
+
+button:hover{
+background:#e60000;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<div class="image-box">
+<img id="productImage">
+</div>
+
+<div class="details">
+<h2 id="productName"></h2>
+<p class="price" id="productPrice"></p>
+<p id="productCategory"></p>
+
+<button onclick="addCart()">Add to Cart 🛒</button>
+</div>
+
+</div>
+
+<script>
+
+let product = JSON.parse(localStorage.getItem("viewProduct"));
+
+if(!product){
+ alert("Product not found ❌");
+ window.location.href = "products.html";
+}
+
+// SHOW DATA
+document.getElementById("productImage").src = product.image;
+document.getElementById("productName").innerText = product.name;
+document.getElementById("productPrice").innerText = "₹" + product.price;
+document.getElementById("productCategory").innerText = "Category: " + product.category;
+
+
+// ADD TO CART
+function addCart(){
+
+ let product = JSON.parse(localStorage.getItem("viewProduct"));
+
+ let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+ let exists = cart.find(p => p.id === product.id);
+
+ if(!exists){
+   cart.push(product);
+ }else{
+   alert("Product already in cart");
+   return;
+ }
+
+ localStorage.setItem("cart", JSON.stringify(cart));
+
+ alert("Product added to cart 🛒");
+
+ window.location.href = "cart.html";
+}
+
+</script>
+
+</body>
+</html>

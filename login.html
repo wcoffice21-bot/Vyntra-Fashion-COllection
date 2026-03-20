@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Login / Signup</title>
+
+<link rel="stylesheet" href="../css/login.css">
+<script src="../js/login.js" defer></script>
+
+</head>
+<body>
+
+<div class="container">
+
+  <!-- LOGIN -->
+  <div class="form-box" id="loginBox">
+    <h2>Login</h2>
+
+    <input type="text" id="loginPhone" placeholder="Phone Number">
+    <input type="password" id="loginPass" placeholder="Password">
+
+    <button onclick="login()">Login</button>
+
+    <p onclick="showSignup()">Create Account</p>
+    <p onclick="showForgot()">Forgot Password?</p>
+  </div>
+
+  <!-- SIGNUP -->
+  <div class="form-box hidden" id="signupBox">
+    <h2>Signup</h2>
+
+    <input type="text" id="signupPhone" placeholder="Phone Number">
+    <input type="password" id="signupPass" placeholder="Password">
+
+    <button onclick="signup()">Signup</button>
+
+  </div>
+
+  <div class="form-box hidden" id="forgotBox">
+
+  <h2>Forgot Password</h2>
+   <p>OTP expires in <span id="timer">55</span> sec</p>
+  <input type="text" id="forgotPhone" placeholder="Enter Phone Number">
+  <button onclick="sendOTP()">Send OTP</button>
+
+  <div id="otpSection" class="hidden">
+    <input type="text" id="otpInput" placeholder="Enter OTP">
+    <input type="password" id="newPass" placeholder="New Password">
+    <button onclick="verifyOTP()">Reset Password</button>
+  </div>
+
+  <p onclick="showLogin()">Back</p>
+
+</div>
+
+</div>
+
+</body>
+</html>

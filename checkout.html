@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Checkout</title>
+</head>
+<body>
+
+<h2>Checkout</h2>
+
+<input placeholder="Name"><br><br>
+<input placeholder="Address"><br><br>
+<input placeholder="Mobile"><br><br>
+
+<button onclick="placeOrder()">Place Order</button>
+
+<script>
+function placeOrder(){
+ alert("Order Placed Successfully 🎉");
+ localStorage.removeItem("cart");
+}
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+function placeOrder(){
+ alert("Order Placed Successfully 🎉");
+ localStorage.removeItem("cart");
+}
+
+<button onclick="payNow()">Pay Now</button>
+
+function payNow(){
+ var options = {
+  key: "YOUR_KEY",
+  amount: 50000,
+  currency: "INR",
+  name: "Vyntra Fashion",
+  handler: function(response){
+   alert("Payment Successful 🎉");
+  }
+ };
+ var rzp = new Razorpay(options);
+ rzp.open();
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Advanced Admin Panel</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100" id="body">
+
+<div class="p-6 max-w-7xl mx-auto">
+
+<div class="flex justify-between items-center mb-4">
+<h1 class="text-2xl font-bold">Admin Panel</h1>
+<button onclick="toggleDark()" class="bg-black text-white px-3 py-1 rounded">🌙</button>
+</div>
+
+<!-- FORM -->
+<form onsubmit="saveProduct(event)" class="bg-white p-4 rounded shadow mb-6">
+
+<div class="grid grid-cols-3 gap-4">
+
+<input id="name" placeholder="Product Name" class="border p-2" required>
+
+<input id="price" placeholder="Price ₹" class="border p-2">
+
+<input id="salePrice" placeholder="Sale Price ₹" class="border p-2">
+
+<select id="category" class="border p-2">
+<option>Men</option>
+<option>Women</option>
+<option>Kids</option>
+</select>
+
+<input id="brand" placeholder="Brand" class="border p-2">
+
+<select id="status" class="border p-2">
+<option>In Stock</option>
+<option>Out of Stock</option>
+</select>
+
+</div>
+
+<!-- IMAGE DROP -->
+<div class="mt-4 border-2 border-dashed p-4 text-center" 
+ondragover="event.preventDefault()" 
+ondrop="dropImage(event)">
+Drag & Drop Images
+<input type="file" multiple onchange="handleImage(this)" class="mt-2">
+</div>
+
+<div id="preview" class="flex gap-2 mt-3 flex-wrap"></div>
+
+<button class="bg-blue-600 text-white px-4 py-2 mt-4 rounded">Save Product</button>
+
+</form>
+
+<!-- SEARCH -->
+<input onkeyup="searchProduct(this.value)" placeholder="Search..." class="border p-2 w-full mb-4">
+
+<!-- PRODUCT LIST -->
+<div id="list" class="grid grid-cols-4 gap-4"></div>
+
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="fixed bottom-5 right-5 bg-black text-white px-4 py-2 hidden"></div>
+
+<script>
+  
+let products = JSON.parse(localStorage.getItem("products")) || [];
+let images = [];
+let editId=null;
+
+// SAVE
+function saveProduct(e){
+  e.preventDefault();
+
+  let product={
+    id: editId || Date.now(),
+    name:name.value,
+    price:price.value,
+    salePrice:salePrice.value,
+    category:category.value.toLowerCase(), // ✅ FIX
+    brand:brand.value,
+    status:status.value,
+    images
+  };
+
+  if(editId){
+    products=products.map(p=>p.id==editId?product:p);
+    editId=null;
+  }else{
+    products.push(product);
+  }
+
+  localStorage.setItem("products",JSON.stringify(products));
+
+  e.target.reset();
+  images=[];
+  preview.innerHTML="";
+  render();
+}
+
+// SEARCH ✅ FIXED
+function searchProduct(val){
+  val = val.toLowerCase().trim();
+
+  if(val === ""){
+    render(products);
+    return;
+  }
+
+  let filtered = products.filter(p => 
+    (p.name && p.name.toLowerCase().includes(val)) ||
+    (p.category && p.category.toLowerCase().includes(val)) ||
+    (p.brand && p.brand.toLowerCase().includes(val))
+  );
+
+  render(filtered);
+}
+
+// RENDER
+function render(data=products){
+  list.innerHTML="";
+  data.forEach(p=>{
+    list.innerHTML+=`
+    <div class="bg-white p-3 rounded shadow">
+      <img src="${p.images[0]||''}" class="h-40 w-full object-cover">
+      <h2>${p.name}</h2>
+      <p>${p.category}</p>
+      <p>₹${p.price}</p>
+    </div>`;
+  });
+}
+
+render();
+
+// DELETE
+function del(id){
+  products=products.filter(p=>p.id!=id);
+  localStorage.setItem("products",JSON.stringify(products));
+  showToast("Deleted ❌");
+  render();
+}
+
+// EDIT
+function edit(id){
+  let p=products.find(x=>x.id==id);
+
+  name.value=p.name;
+  price.value=p.price;
+  salePrice.value=p.salePrice;
+  category.value=p.category;
+  brand.value=p.brand;
+  status.value=p.status;
+
+  images=p.images;
+  showPreview();
+
+  editId=id;
+}
+
+// SEARCH
+function searchProduct(val){
+  let filtered=products.filter(p=>p.name.toLowerCase().includes(val.toLowerCase()));
+  render(filtered);
+}
+
+// TOAST
+function showToast(msg){
+  toast.innerText=msg;
+  toast.classList.remove("hidden");
+  setTimeout(()=>toast.classList.add("hidden"),2000);
+}
+
+// DARK MODE
+function toggleDark(){
+  body.classList.toggle("bg-black");
+  body.classList.toggle("text-white");
+}
+
+render();
+</script>
+
+</body>
+</html>
